@@ -8,7 +8,11 @@ class Register extends Component {
     password: ""
   };
 
-  onChange = e => {};
+  onChange = e => {
+    const { name, value } = e.target;
+    //name = email
+    this.setState({ [name]: value });
+  };
 
   render() {
     const { username, email, password } = this.state;
@@ -17,18 +21,21 @@ class Register extends Component {
       <Container text>
         <Header as="h2">Register</Header>
         <Input
+          name="username"
           onChange={this.onChange}
           value={username}
           placeholder="Username"
           fluid
         />
         <Input
+          name="email"
           onChange={this.onChange}
           value={email}
           placeholder="Email"
           fluid
         />
         <Input
+          name="password"
           onChange={this.onChange}
           value={password}
           placeholder="password"
