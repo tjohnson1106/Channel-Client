@@ -1,11 +1,20 @@
 import React, { Component } from "react";
-import { Input, Container, Header } from "semantic-ui-react";
+import { Button, Input, Container, Header } from "semantic-ui-react";
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 
 class Register extends Component {
   state = {
     username: "",
     email: "",
     password: ""
+  };
+
+  onSubmit = async () => {
+    const response = await this.props.mutate({
+      variables: this.state
+    });
+    console.log(response);
   };
 
   onChange = e => {
@@ -27,6 +36,7 @@ class Register extends Component {
           placeholder="Username"
           fluid
         />
+
         <Input
           name="email"
           onChange={this.onChange}
@@ -38,12 +48,19 @@ class Register extends Component {
           name="password"
           onChange={this.onChange}
           value={password}
-          placeholder="password"
+          placeholder="Password"
           fluid
         />
+        <Button onClick={this.onSubmit}>Submit</Button>
       </Container>
     );
   }
 }
 
-export default Register;
+const registerMutation = gql`
+mutation($username:"String!", $email: "String!", $password:"String!") {
+  register(username: $username, email: $email, password: $password)
+}
+`;
+
+export default graphql(registerMutation)(Register);
