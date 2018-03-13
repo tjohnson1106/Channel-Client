@@ -1,28 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import {
-  ApolloClient,
-  createNetworkInterface,
-  ApolloProvider
-} from "react-apollo";
+import { ApolloProvider } from "react-apollo";
+import { ApolloClient } from "apollo-client";
+import { HttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { BrowserRouter } from "react-router-dom";
+import "semantic-ui-css/semantic.min.css";
 
+import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
 import Routes from "./routes";
 
-const networkInterface = createNetworkInterface({
-  uri: "http://localhost:8080/graphql"
-});
-
 const client = new ApolloClient({
-  networkInterface: networkInterface
+  link: new HttpLink({ uri: "http://localhost:8080/graphql" }),
+  cache: new InMemoryCache()
 });
 
-const App = (
-  <ApolloProvider client={client}>
-    <Routes />
-  </ApolloProvider>
+ReactDOM.render(
+  <BrowserRouter>
+    <ApolloProvider client={client}>
+      <Routes />
+    </ApolloProvider>
+  </BrowserRouter>,
+  document.getElementById("root")
 );
-
-ReactDOM.render(App, document.getElementById("root"));
-registerServiceWorker();
