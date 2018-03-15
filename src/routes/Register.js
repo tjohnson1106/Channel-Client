@@ -6,14 +6,31 @@ import { graphql } from "react-apollo";
 class Register extends Component {
   state = {
     username: "",
+    usernameError: "",
     email: "",
-    password: ""
+    emailError: "",
+    password: "",
+    passwordError: ""
   };
 
   onSubmit = async () => {
+    const { username, email, password } = this.state;
     const response = await this.props.mutate({
-      variables: this.state
+      variables: { username, email, password }
     });
+
+    const { ok, errors } = response.data.register;
+
+    if (ok) {
+      this.props.history.push("/");
+    } else {
+      const err = {};
+      errors.forEach(({ path, message }) => {
+        //err["passwordError"] = message
+        err[`${path}Error`] = message;
+      });
+      this.setState(err);
+    }
 
     console.log(response);
   };
@@ -25,12 +42,20 @@ class Register extends Component {
   };
 
   render() {
-    const { username, email, password } = this.state;
+    const {
+      username,
+      email,
+      password,
+      usernameError,
+      emailError,
+      passwordError
+    } = this.state;
 
     return (
       <Container text>
         <Header as="h2">Register</Header>
         <Input
+          error={!!usernameError}
           name="username"
           onChange={this.onChange}
           value={username}
@@ -38,6 +63,7 @@ class Register extends Component {
           fluid
         />
         <Input
+          error={!!emailError}
           name="email"
           onChange={this.onChange}
           value={email}
@@ -45,6 +71,7 @@ class Register extends Component {
           fluid
         />
         <Input
+          error={!!passwordError}
           name="password"
           onChange={this.onChange}
           value={password}
@@ -60,7 +87,17 @@ class Register extends Component {
 
 const registerMutation = gql`
   mutation($username: String!, $email: String!, $password: String!) {
-    register(username: $username, email: $email, password: $password)
+    register(
+      username: $username
+      email: $email
+      password: $password
+    ) {
+      ok
+      errors {
+        path
+        message
+      }
+    }
   }
 `;
 
