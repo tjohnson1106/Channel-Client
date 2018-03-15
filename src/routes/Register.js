@@ -14,12 +14,13 @@ class Register extends Component {
     const response = await this.props.mutate({
       variables: this.state
     });
+
     console.log(response);
   };
 
   onChange = e => {
     const { name, value } = e.target;
-    //name = email
+    // name = "email";
     this.setState({ [name]: value });
   };
 
@@ -36,7 +37,6 @@ class Register extends Component {
           placeholder="Username"
           fluid
         />
-
         <Input
           name="email"
           onChange={this.onChange}
@@ -48,6 +48,7 @@ class Register extends Component {
           name="password"
           onChange={this.onChange}
           value={password}
+          type="password"
           placeholder="Password"
           fluid
         />
@@ -58,9 +59,9 @@ class Register extends Component {
 }
 
 const registerMutation = gql`
-mutation($username:"String!", $email: "String!", $password:"String!") {
-  register(username: $username, email: $email, password: $password)
-}
+  mutation($username: String!, $email: String!, $password: String!) {
+    register(username: $username, email: $email, password: $password)
+  }
 `;
 
 export default graphql(registerMutation)(Register);
