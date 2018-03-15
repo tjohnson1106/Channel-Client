@@ -14,6 +14,12 @@ class Register extends Component {
   };
 
   onSubmit = async () => {
+    this.setState({
+      usernameError: "",
+      emailError: "",
+      passwordError: ""
+    });
+
     const { username, email, password } = this.state;
     const response = await this.props.mutate({
       variables: { username, email, password }
